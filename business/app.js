@@ -20,7 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
+// declare idx
+const idx = 0;
+app.set("idx", idx);
 // declare queueMap
 const queueMap = new Map();
 app.set("queueMap", queueMap);

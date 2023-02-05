@@ -1,6 +1,8 @@
 const check = async (req, res, next) => {
   const { location, date } = req.query;
-  req.query.createTime = new Date();
+  req.query.createTime = req.app.get("idx");
+  req.app.set("idx", req.app.get("idx") + 1);
+  console.log("create time: ", req.query.createTime);
   let queueMap = req.app.get("queueMap");
   if (
     !queueMap.has(location) ||
