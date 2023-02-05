@@ -2,6 +2,7 @@ const push = async (req, res, next) => {
   const { location, timestamp } = req.body;
   const date = timestamp.split("T")[0];
   req.orderId = `${location}-${timestamp}`;
+  req.body.createTime = new Date();
   let queueMap = req.app.get("queueMap");
   if (!queueMap.has(location)) {
     queueMap.set(location, new Map());

@@ -9,7 +9,7 @@ const store = async (record) => {
 
 const get = async (search) => {
   let res = await axios.get(
-    `${STORAGE_URL}/records?location=${search.location}&date=${search.date}`
+    `${STORAGE_URL}/records?location=${search.location}&date=${search.date}&createTime=${search.createTime}`
   );
   return res.data;
 };

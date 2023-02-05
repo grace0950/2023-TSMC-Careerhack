@@ -3,9 +3,9 @@ const { Record } = require("../dto/Record");
 const recordModel = require("../model/record");
 
 const getRecords = async (req, res) => {
-  location = req.query.location || "default";
-  date = req.query.date || "2020-01-01";
-  createTime = new Date();
+  location = req.query.location;
+  date = req.query.date;
+  createTime = req.query.createTime;
   try {
     const rows = await recordModel.get(location, date, createTime);
     res.json(rows);

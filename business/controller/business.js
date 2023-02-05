@@ -10,6 +10,8 @@ const updateOrder = async (req, res) => {
   try {
     const record = new Record(await businessModel.calculate(order));
     const result = new Result(await businessModel.storeRecord(record));
+    let ee = req.app.get("eventEmitter");
+    ee.emit(`order-${orderId}-finish`);
     req.app
       .get("queueMap")
       .get(order.location)
@@ -24,8 +26,6 @@ const updateOrder = async (req, res) => {
 const getRecord = async (req, res) => {
   const search = new Search(req.query);
   try {
-    // use orchestration
-
     const rows = await businessModel.getRecord(search);
     res.json(rows);
   } catch (error) {

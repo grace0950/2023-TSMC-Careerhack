@@ -1,7 +1,8 @@
 class Search {
-  constructor({ location, date }) {
+  constructor({ location, date, createTime }) {
     this.location = location;
     this.date = date;
+    this.createTime = createTime;
   }
 }
 

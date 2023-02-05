@@ -7,9 +7,11 @@ const get = async (location, date, createTime) => {
   const values = [location, date, createTime];
   try {
     const rows = await poolQuery(sql, values);
-    delete rows[0].create_time;
-    delete rows[0].date;
-    return rows[0];
+    for (let i = 0; i < rows.length; i++) {
+      delete rows[i].create_time;
+      delete rows[i].date;
+    }
+    return rows;
   } catch (error) {
     throw error;
   }
