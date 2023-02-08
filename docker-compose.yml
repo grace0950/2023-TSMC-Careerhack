@@ -57,7 +57,8 @@ services:
     restart: always
     volumes:
       - db-data:/var/lib/mysql
-
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      
   proxy:
     container_name: proxy
     image: nginx:alpine
