@@ -16,7 +16,7 @@ const updateOrder = async (req, res) => {
       .get("queueMap")
       .get(order.location)
       .get(order.timestamp.split("T")[0])
-      .delete(`${order.location}-${order.timestamp}`);
+      .delete(orderId);
     res.json(result.ok);
   } catch (error) {
     res.json(error);
@@ -27,6 +27,7 @@ const getRecord = async (req, res) => {
   const search = new Search(req.query);
   try {
     const rows = await businessModel.getRecord(search);
+    console.log(rows[0].location, rows.length);
     res.json(rows);
   } catch (error) {
     res.json(error);
