@@ -11,14 +11,16 @@ const updateOrder = async (req, res) => {
   try {
     const record = new Record(await businessModel.calculate(order));
     const result = new Result(await businessModel.storeRecord(record));
-    if (result.ok) {
-      const date = record.timestamp.split("T")[0];
-      const key = `${record.location}-${date}`;
-      await redisClient.decr(key);
-    }
     res.json(result.ok);
   } catch (error) {
     res.status(error.status || 500).json(error);
+  } finally {
+    const date = order.timestamp.split("T")[0];
+    const key = `${order.location}-${date}`;
+    const count = await redisClient.get(key);
+    if (count) {
+      await redisClient.decr(key);
+    }
   }
 };
 
@@ -28,7 +30,8 @@ const getRecord = async (req, res) => {
     const rows = await businessModel.getRecord(search);
     res.json(rows);
   } catch (error) {
-    console.log(error);
+    res.status(error.status || 500).json(error);
+    // console.log(error);
   }
 };
 

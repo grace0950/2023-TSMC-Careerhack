@@ -15,7 +15,14 @@ app.use(bp.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
 
-app.use(logger("dev"));
+app.use(
+  logger("dev", {
+    // skip: () =>
+    //   function (req, res) {
+    //     return res.statusCode == 200;
+    //   },
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -31,6 +38,18 @@ app.use(async (req, res, next) => {
 });
 
 const businessRouter = require("./routes/business");
+
+// app.get("/", (req, res) => {
+//   console.log("hello");
+//   res.send("hello");
+// });
+
+// let counter = 0;
+// app.use((req, res, next) => {
+//   counter++;
+//   console.log(counter);
+//   next();
+// });
 
 app.use("/business", businessRouter);
 
