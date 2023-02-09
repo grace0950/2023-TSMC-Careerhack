@@ -7,9 +7,9 @@ const getRecords = async (req, res) => {
   date = req.query.date;
   try {
     const rows = await recordModel.get(location, date);
-    res.json(rows);
+    res.status(200).json(rows);
   } catch (error) {
-    res.json(error);
+    res.status(409).json(error);
   }
 };
 
@@ -17,9 +17,9 @@ const createRecord = async (req, res) => {
   const record = new Record(req.body);
   try {
     const rows = await recordModel.create(record);
-    res.json(rows);
+    res.status(200).json(rows);
   } catch (error) {
-    res.json(error);
+    res.status(409).json(error);
   }
 };
 
