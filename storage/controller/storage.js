@@ -5,9 +5,8 @@ const recordModel = require("../model/record");
 const getRecords = async (req, res) => {
   location = req.query.location;
   date = req.query.date;
-  createTime = req.query.createTime;
   try {
-    const rows = await recordModel.get(location, date, createTime);
+    const rows = await recordModel.get(location, date);
     res.json(rows);
   } catch (error) {
     res.json(error);

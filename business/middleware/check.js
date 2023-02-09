@@ -1,36 +1,20 @@
 const check = async (req, res, next) => {
   const { location, date } = req.query;
-  req.query.createTime = req.app.get("idx");
-  req.app.set("idx", req.app.get("idx") + 1);
-  // next();
-  let queueMap = req.app.get("queueMap");
-  // console.log("GET: ", location, queueMap);
-  if (
-    !queueMap.has(location) ||
-    !queueMap.get(location).has(date) ||
-    queueMap.get(location).get(date).size === 0
-  ) {
-    queueMap.delete(location);
-    next();
-  } else {
-    // console.log("waiting");
-    const ee = req.app.get("eventEmitter");
-    let waitingSet = queueMap.get(location).get(date);
-    // console.log(waitingSet);
-    for (let orderId of waitingSet) {
-      if (!queueMap.get(location).get(date).has(orderId)) continue;
-      await wait(orderId, ee);
+  const redisClient = req.redisClient;
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const count = await redisClient.get(`${location}-${date}`);
+  const retryDelay = [1000, 2000, 4000];
+  if (count) {
+    for (let i = 0; i <= retryDelay.length; i++) {
+      await delay(retryDelay[i]);
+      const newCount = await redisClient.get(`${location}-${date}`);
+      if (!newCount || newCount === "0") {
+        next();
+        return;
+      }
     }
-    next();
   }
-};
-
-const wait = async (orderId, ee) => {
-  return new Promise((resolve, reject) => {
-    ee.on(`order-${orderId}-finish`, () => {
-      resolve();
-    });
-  });
+  next();
 };
 
 module.exports = { check };

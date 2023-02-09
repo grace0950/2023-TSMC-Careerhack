@@ -21,7 +21,6 @@ class Record {
     this.signature = Buffer.from(
       (this.a + this.b + this.c + this.d).toString()
     ).toString("base64");
-    this.createTime = order.createTime;
   }
 }
 

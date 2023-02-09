@@ -1,15 +1,5 @@
 class Record {
-  constructor({
-    location,
-    timestamp,
-    signature,
-    material,
-    a,
-    b,
-    c,
-    d,
-    createTime,
-  }) {
+  constructor({ location, timestamp, signature, material, a, b, c, d }) {
     this.location = location;
     this.timestamp = timestamp;
     this.signature = signature;
@@ -18,7 +8,6 @@ class Record {
     this.b = b;
     this.c = c;
     this.d = d;
-    this.createTime = createTime;
   }
 
   toSql() {
@@ -31,7 +20,6 @@ class Record {
       b: this.b,
       c: this.c,
       d: this.d,
-      create_time: this.createTime,
       date: this.timestamp.split("T")[0],
     };
   }

@@ -1,21 +1,14 @@
-const push = (req, res, next) => {
+const push = async (req, res, next) => {
   const { location, timestamp } = req.body;
   const date = timestamp.split("T")[0];
-  req.orderId = `${location}-${timestamp}`;
-  req.body.createTime = req.app.get("idx");
-  req.app.set("idx", req.app.get("idx") + 1);
-  // next();
-  let queueMap = req.app.get("queueMap");
-  if (!queueMap.has(location)) {
-    queueMap.set(location, new Map());
-  }
-  if (!queueMap.get(location).has(date)) {
-    queueMap.get(location).set(date, new Set());
-  }
-  queueMap.get(location).get(date).add(req.orderId);
+  const redisClient = req.redisClient;
 
-  // console.log("POST: ", location, queueMap);
-
+  if (!(await redisClient.get(`${location}-${date}`))) {
+    await redisClient.set(`${location}-${date}`, 1);
+    await redisClient.expire(`${location}-${date}`, 20);
+  } else {
+    await redisClient.incr(`${location}-${date}`);
+  }
   next();
 };
 

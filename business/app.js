@@ -20,16 +20,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// declare idx
-const idx = 0;
-app.set("idx", idx);
-// declare queueMap
-const queueMap = new Map();
-app.set("queueMap", queueMap);
-// declare eventEmitter
-const events = require("events");
-const eventEmitter = new events.EventEmitter();
-app.set("eventEmitter", eventEmitter);
+
+// redis client
+const Redis = require("ioredis");
+const redis = new Redis();
+
+app.use(async (req, res, next) => {
+  req.redisClient = redis;
+  next();
+});
 
 const businessRouter = require("./routes/business");
 
