@@ -2,7 +2,12 @@ const { cal } = require("../utils/inventory");
 const { store, get } = require("../utils/storage");
 
 const calculate = async (order) => {
-  return await cal(order);
+  try {
+    const res = await cal(order);
+    return res;
+  } catch (e) {
+    throw e;
+  }
 };
 
 const storeRecord = async (record) => {

@@ -1,4 +1,5 @@
 const businessModel = require("../model/business");
+const { HttpError } = require("../utils/httpError");
 const { Order } = require("../dto/Order");
 const { Record } = require("../dto/Record");
 const { Result } = require("../dto/Result");
@@ -19,7 +20,7 @@ const updateOrder = async (req, res) => {
       .delete(orderId);
     res.json(result.ok);
   } catch (error) {
-    res.json(error);
+    res.status(error.status || 500).json(error);
   }
 };
 
