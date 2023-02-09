@@ -15,20 +15,20 @@ type Data struct {
 }
 
 type Order struct {
-	Location   string `json:"location"`
-	Timestamp  string `json:"timestamp"`
-	Data       Data   `json:"data"`
+	Location  string `json:"location"`
+	Timestamp string `json:"timestamp"`
+	Data      Data   `json:"data"`
 }
 
 type Record struct {
-	Location   string `json:"location"`
-	Timestamp  string `json:"timestamp"`
-	Signature  string `json:"signature"`
-	Material   int    `json:"material"`
-	A          int    `json:"a"`
-	B          int    `json:"b"`
-	C          int    `json:"c"`
-	D          int    `json:"d"`
+	Location  string `json:"location"`
+	Timestamp string `json:"timestamp"`
+	Signature string `json:"signature"`
+	Material  int    `json:"material"`
+	A         int    `json:"a"`
+	B         int    `json:"b"`
+	C         int    `json:"c"`
+	D         int    `json:"d"`
 }
 
 func main() {
