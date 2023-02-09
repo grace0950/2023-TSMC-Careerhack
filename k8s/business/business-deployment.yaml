@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-deployment
+spec:
+  selector:
+    matchLabels:
+      app: business
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: business
+        tier: backend
+    spec:
+      containers:
+        - name: business
+          image: seco1024/ha-business
+          env:
+            - name: INVENTORY_URL
+              value: http://localhost:4000/inventory
+            - name: STORAGE_URL
+              value: http://localhost:6000/storage
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          ports:
+            - containerPort: 3000

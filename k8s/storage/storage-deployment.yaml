@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-deployment
+spec:
+  selector:
+    matchLabels:
+      app: storage
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: storage
+        tier: backend
+    spec:
+      containers:
+        - name: storage
+          image: seco1024/ha-storage
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          ports:
+            - containerPort: 6000
