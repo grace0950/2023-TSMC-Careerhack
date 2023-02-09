@@ -8,6 +8,5 @@ CREATE TABLE record (
   c float NOT NULL,
   d float NOT NULL,
   date varchar(45) NOT NULL,
-  create_time varchar(45) NOT NULL,
-  PRIMARY KEY (location,`timestamp`,`signature`,`material`,`a`,`b`,`c`,`d`,`date`,`create_time`)
+  PRIMARY KEY (location,`timestamp`,`signature`,`material`,`a`,`b`,`c`,`d`,`date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

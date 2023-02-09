@@ -1,7 +1,5 @@
 const check = async (req, res, next) => {
   const { location, date } = req.query;
-  req.query.createTime = req.app.get("idx");
-  req.app.set("idx", req.app.get("idx") + 1);
   // next();
   let queueMap = req.app.get("queueMap");
   // console.log("GET: ", location, queueMap);

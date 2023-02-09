@@ -18,7 +18,6 @@ type Order struct {
 	Location   string `json:"location"`
 	Timestamp  string `json:"timestamp"`
 	Data       Data   `json:"data"`
-	CreateTime int    `json:"createTime"`
 }
 
 type Record struct {
@@ -30,7 +29,6 @@ type Record struct {
 	B          int    `json:"b"`
 	C          int    `json:"c"`
 	D          int    `json:"d"`
-	CreateTime int    `json:"createTime"`
 }
 
 func main() {
@@ -58,7 +56,6 @@ func main() {
 		record.B = order.Data.B
 		record.C = order.Data.C
 		record.D = order.Data.D
-		record.CreateTime = order.CreateTime
 		c.JSON(http.StatusOK, record)
 	})
 

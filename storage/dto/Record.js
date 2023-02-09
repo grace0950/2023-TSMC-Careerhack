@@ -8,7 +8,6 @@ class Record {
     b,
     c,
     d,
-    createTime,
   }) {
     this.location = location;
     this.timestamp = timestamp;
@@ -18,7 +17,6 @@ class Record {
     this.b = b;
     this.c = c;
     this.d = d;
-    this.createTime = createTime;
   }
 
   toSql() {
@@ -31,7 +29,6 @@ class Record {
       b: this.b,
       c: this.c,
       d: this.d,
-      create_time: this.createTime,
       date: this.timestamp.split("T")[0],
     };
   }
