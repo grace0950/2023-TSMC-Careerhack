@@ -15,22 +15,20 @@ type Data struct {
 }
 
 type Order struct {
-	Location   string `json:"location"`
-	Timestamp  string `json:"timestamp"`
-	Data       Data   `json:"data"`
-	CreateTime int    `json:"createTime"`
+	Location  string `json:"location"`
+	Timestamp string `json:"timestamp"`
+	Data      Data   `json:"data"`
 }
 
 type Record struct {
-	Location   string `json:"location"`
-	Timestamp  string `json:"timestamp"`
-	Signature  string `json:"signature"`
-	Material   int    `json:"material"`
-	A          int    `json:"a"`
-	B          int    `json:"b"`
-	C          int    `json:"c"`
-	D          int    `json:"d"`
-	CreateTime int    `json:"createTime"`
+	Location  string `json:"location"`
+	Timestamp string `json:"timestamp"`
+	Signature string `json:"signature"`
+	Material  int    `json:"material"`
+	A         int    `json:"a"`
+	B         int    `json:"b"`
+	C         int    `json:"c"`
+	D         int    `json:"d"`
 }
 
 func main() {
@@ -59,7 +57,6 @@ func main() {
 		record.B = order.Data.B
 		record.C = order.Data.C
 		record.D = order.Data.D
-		record.CreateTime = order.CreateTime
 		c.JSON(http.StatusOK, record)
 	})
 
