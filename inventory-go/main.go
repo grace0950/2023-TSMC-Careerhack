@@ -48,7 +48,7 @@ func main() {
 				"message": "Bad Request",
 			})
 		}
-		record := Record{}
+		var record Record
 		record.Location = order.Location
 		record.Timestamp = order.Timestamp
 		// signature is the base64 of int(material.a + material.b + material.c + material.d)
