@@ -1,5 +1,14 @@
 class Record {
-  constructor({ location, timestamp, signature, material, a, b, c, d }) {
+  constructor({
+    location,
+    timestamp,
+    signature,
+    material,
+    a,
+    b,
+    c,
+    d,
+  }) {
     this.location = location;
     this.timestamp = timestamp;
     this.signature = signature;
