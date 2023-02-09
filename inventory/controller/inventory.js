@@ -6,10 +6,15 @@ delay = (ms) => {
 };
 
 const calculate = async (req, res) => {
-  const order = new Order(req.body);
-  const record = new Record(order);
-  // await delay(3000);
-  res.json(record);
+  try {
+    const order = new Order(req.body);
+    const record = new Record(order);
+    // await delay(3000);
+    res.status(200).json(record);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json(e);
+  }
 };
 
 module.exports = { calculate };
