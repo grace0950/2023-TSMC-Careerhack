@@ -2,8 +2,9 @@ const { poolQuery } = require("../utils/mysql");
 const { Record } = require("../dto/Record");
 
 const get = async (location, date, createTime) => {
-  const sql =
-    "SELECT * FROM record WHERE location = ? AND date = ? AND create_time <= ?";
+  // const sql =
+  //   "SELECT * FROM record WHERE location = ? AND date = ? AND create_time <= ?";
+  const sql = "SELECT * FROM record WHERE location = ? AND date = ?";
   const values = [location, date, createTime];
   try {
     const rows = await poolQuery(sql, values);
