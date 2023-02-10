@@ -7,7 +7,7 @@ const { Search } = require("../dto/Search");
 
 const updateOrder = async (req, res) => {
   const order = new Order(req.body);
-  const redisClient = req.redisClient;
+  // const redisClient = req.redisClient;
   try {
     const record = new Record(await businessModel.calculate(order));
     const result = new Result(await businessModel.storeRecord(record));
@@ -16,15 +16,16 @@ const updateOrder = async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(error.status || 500).json(error);
-  } finally {
-    const date = order.timestamp.split("T")[0];
-    const key = `${order.location}-${date}`;
-    const count = await redisClient.get(key);
-
-    if (count && parseInt(count) > 0) {
-      await redisClient.decr(key);
-    }
   }
+  // finally {
+  //   const date = order.timestamp.split("T")[0];
+  //   const key = `${order.location}-${date}`;
+  //   const count = await redisClient.get(key);
+
+  //   if (count && parseInt(count) > 0) {
+  //     await redisClient.decr(key);
+  //   }
+  // }
 };
 
 const getRecord = async (req, res) => {
