@@ -9,7 +9,7 @@ const check = async (req, res, next) => {
       // random number between in retryDelay
       await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
       const newCount = await redisClient.get(`${location}-${date}`);
-      if (!newCount || newCount === "0") {
+      if (!newCount || parseInt(newCount) <= 0) {
         next();
         return;
       }

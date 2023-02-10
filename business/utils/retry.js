@@ -1,20 +1,25 @@
-const axios = require("axios");
+// const axios = require("axios");
+const fetch = require("node-fetch-commonjs");
 const { HttpError } = require("./httpError");
 
-let delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let delay = (ms) =>
+  new Promise((resolve) => setTimeout(resolve, ms), console.log(ms));
 
 const retry = async (method, url, body) => {
-  const retryDelay = [350, 750, 1750, 2350, 3750, 4350];
+  const retryDelay = [1000, 2000, 1000, 3000];
   let error = new HttpError("", 404);
   for (let i = 0; i <= retryDelay.length; i++) {
     try {
-      const config = {
+      let config = {
         method: method,
-        url: url,
-        data: body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+        timeout: 500,
       };
-      const res = await axios(config);
-      return res;
+      const res = await fetch(url, config);
+      return res.json();
     } catch (e) {
       error.status = e.response ? e.response.status : 409;
       error.message = e.message ? e.message : "cannot calculate data";

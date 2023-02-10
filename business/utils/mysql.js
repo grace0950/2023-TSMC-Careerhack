@@ -1,8 +1,8 @@
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-  host: "localhost",
-  port: 3307,
+  host: process.env.MYSQL_HOST || "localhost",
+  port: process.env.MYSQL_PORT || 3307,
   user: "root",
   password: "cerana",
   database: "tsmc_storage",

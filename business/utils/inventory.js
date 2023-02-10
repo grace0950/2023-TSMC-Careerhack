@@ -1,11 +1,12 @@
 const { retry } = require("./retry");
-const INVENTORY_URL = "http://localhost:8200/";
+const INVENTORY_URL =
+  process.env.INVENTORY_URL || "http://inventory:4000/inventory";
 // const INVENTORY_URL = "http://localhost:4000/inventory";
 
 const cal = async (order) => {
   try {
     const res = await retry("post", `${INVENTORY_URL}`, order);
-    return res.data;
+    return res;
   } catch (e) {
     throw e;
   }

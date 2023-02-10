@@ -3,7 +3,10 @@ const { poolQuery } = require("../utils/mysql");
 const { HttpError } = require("../utils/httpError");
 
 const { Search } = require("../dto/Search");
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const delay = (ms) =>
+  new Promise((resolve) => setTimeout(resolve, ms), console.log(ms));
+
 const calculate = async (order) => {
   try {
     const res = await cal(order);

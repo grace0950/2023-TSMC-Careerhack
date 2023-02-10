@@ -18,7 +18,8 @@ const updateOrder = async (req, res) => {
     const date = order.timestamp.split("T")[0];
     const key = `${order.location}-${date}`;
     const count = await redisClient.get(key);
-    if (count) {
+    
+    if (count && parseInt(count) > 0) {
       await redisClient.decr(key);
     }
   }
