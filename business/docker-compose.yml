@@ -8,7 +8,7 @@ services:
     build:
       context: .
     environment:
-      - INVENTORY_URL=http://10.0.0.6:8200/api/inventory   #記得改成ip
+      - INVENTORY_URL=http://10.0.0.6:8200/inventory   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
       - MYSQL_PORT=8300
       - REDIS_HOST=cache
@@ -21,7 +21,7 @@ services:
     container_name: business-2
     image: ha-business
     environment:
-      - INVENTORY_URL=http://10.0.0.6:8200/api/inventory   #記得改成ip
+      - INVENTORY_URL=http://10.0.0.6:8200/inventory   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
       - MYSQL_PORT=8300
       - REDIS_HOST=cache
