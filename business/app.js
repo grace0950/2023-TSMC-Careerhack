@@ -29,16 +29,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 // redis client
-const Redis = require("ioredis");
-const redis = new Redis({
-  host: process.env.REDIS_HOST || "localhost",
-  port: process.env.REDIS_PORT || 6379,
-});
+// const Redis = require("ioredis");
+// const redis = new Redis({
+//   host: process.env.REDIS_HOST || "localhost",
+//   port: process.env.REDIS_PORT || 6379,
+// });
 
-app.use(async (req, res, next) => {
-  req.redisClient = redis;
-  next();
-});
+// app.use(async (req, res, next) => {
+//   req.redisClient = redis;
+//   next();
+// });
 
 const businessRouter = require("./routes/business");
 

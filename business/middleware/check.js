@@ -1,9 +1,13 @@
 const check = async (req, res, next) => {
   const { location, date } = req.query;
   const redisClient = req.redisClient;
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const delay = (ms) =>
+    new Promise(
+      (resolve) => setTimeout(resolve, ms),
+      console.log("to reader: ", ms)
+    );
   const count = await redisClient.get(`${location}-${date}`);
-  const retryDelay = [300, 700, 1700, 2300, 3700, 4300];
+  const retryDelay = [300, 700, 1700, 2300, 3700];
   if (count) {
     for (let i = 0; i <= retryDelay.length; i++) {
       // random number between in retryDelay

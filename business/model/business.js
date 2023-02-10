@@ -21,7 +21,7 @@ const calculate = async (order) => {
 };
 
 const storeRecord = async (record) => {
-  const retryDelay = [770, 1370, 1770, 2370, 3770];
+  const retryDelay = [1050, 2050, 4050, 6050];
   let error = new HttpError("", 404);
   const recordSQL = record.toSql();
   const sql = "INSERT INTO record SET ?";
@@ -43,30 +43,50 @@ const storeRecord = async (record) => {
 };
 
 const getRecord = async (search) => {
+  const retryDelay = [1050, 2050, 4050, 6050];
+  let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
     FROM record WHERE location = ? AND date = ?";
   const values = [search.location, search.date];
-  try {
-    const rows = await poolQuery(sql, values);
-    return rows;
-  } catch (error) {
-    throw error;
+  for (let i = 0; i <= retryDelay.length; i++) {
+    try {
+      const rows = await poolQuery(sql, values);
+      return rows;
+    } catch (error) {
+      error.status = error.status ? error.status : 409;
+      error.message = error.message ? error.message : "cannot store data";
+      if (i < retryDelay.length) {
+        // random number between in retryDelay
+        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
+      }
+    }
   }
+  throw error;
 };
 
 const getReport = async (search) => {
+  const retryDelay = [1050, 2050, 4050, 6050];
+  let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
   FROM record WHERE location = ? AND date = ?";
   const values = [search.location, search.date];
-  try {
-    const rows = await poolQuery(sql, values);
-    const report = new Report(rows);
-    return report;
-  } catch (error) {
-    throw error;
+  for (let i = 0; i <= retryDelay.length; i++) {
+    try {
+      const rows = await poolQuery(sql, values);
+      const report = new Report(rows);
+      return report;
+    } catch (error) {
+      error.status = error.status ? error.status : 409;
+      error.message = error.message ? error.message : "cannot store data";
+      if (i < retryDelay.length) {
+        // random number between in retryDelay
+        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
+      }
+    }
   }
+  throw error;
 };
 
 module.exports = { calculate, storeRecord, getRecord, getReport };
