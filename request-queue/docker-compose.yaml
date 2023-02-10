@@ -9,25 +9,28 @@ services:
       - INVENTORY_HOST=10.0.0.6   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
       - MYSQL_PORT=8300
-      - MONGO_CONNECTION_STRING=mongodb://mongo:27017
+      - MONGO_CONNECTION_STRING=mongodb://root:cerana@mongo:27017/
     ports:
-      - 10.0.0.5:7777:7777
+      - 7777:7777
     restart: always
-    depends_on:
-      mongo: 
-        condition: service_healthy
+    # depends_on:
+    #  mongo:
+    #   condition: service_healthy
 
 
   mongo:
     container_name: mongo
-    image: mongo
+    image: mongo:6.0.4
     restart: always
     ports:
-      - "27017:27017"
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: cerana
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
       interval: 2s
       timeout: 3s
-      retries: 3
+      retries: 5
       start_period: 3s
       

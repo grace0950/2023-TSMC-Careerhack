@@ -6,4 +6,4 @@ RUN npm install && npm cache clean --force
 COPY . .
 EXPOSE 7777
 
-CMD ["npm", "run", "start"]
+CMD ["node", "index.js"]
