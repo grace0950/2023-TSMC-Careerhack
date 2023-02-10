@@ -21,7 +21,7 @@ const calculate = async (order) => {
 };
 
 const storeRecord = async (record) => {
-  const retryDelay = [1050, 3060, 6060, 9060];
+  const retryDelay = [1100, 2900, 6100, 8900];
   let error = new HttpError("", 404);
   const recordSQL = record.toSql();
   const sql = "INSERT INTO record SET ?";
@@ -43,7 +43,7 @@ const storeRecord = async (record) => {
 };
 
 const getRecord = async (search) => {
-  const retryDelay = [1050, 2050, 4050, 6050];
+  const retryDelay = [1100, 2900, 6100, 8900];
   let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
@@ -66,7 +66,7 @@ const getRecord = async (search) => {
 };
 
 const getReport = async (search) => {
-  const retryDelay = [1050, 2050, 4050, 6050];
+  const retryDelay = [1100, 2900, 6100, 8900];
   let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \

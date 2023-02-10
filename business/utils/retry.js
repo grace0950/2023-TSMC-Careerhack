@@ -9,7 +9,7 @@ let delay = (ms) =>
   );
 
 const retry = async (method, url, body) => {
-  const retryDelay = [3050, 9050, 12050];
+  const retryDelay = [900, 2900, 5900, 8900];
   let error = new HttpError("", 404);
   for (let i = 0; i <= retryDelay.length; i++) {
     try {
