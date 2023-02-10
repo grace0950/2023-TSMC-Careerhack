@@ -35,7 +35,7 @@ const storeRecord = async (record) => {
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
         // random number between in retryDelay
-        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
+        await delay(retryDelay[i]);
       }
     }
   }
@@ -58,7 +58,7 @@ const getRecord = async (search) => {
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
         // random number between in retryDelay
-        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
+        await delay(retryDelay[i]);
       }
     }
   }
