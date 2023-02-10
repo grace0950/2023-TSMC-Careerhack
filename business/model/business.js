@@ -1,9 +1,8 @@
-const { cal } = require("../utils/inventory");
 const { poolQuery } = require("../utils/mysql");
 const fetch = require("node-fetch-commonjs");
 
-const { HttpError } = require("../utils/httpError");
-const { Search } = require("../dto/Search");
+// const { HttpError } = require("../utils/httpError");
+// const { Search } = require("../dto/Search");
 const { Report } = require("../dto/Report");
 
 const delay = (ms) =>
@@ -52,50 +51,36 @@ const storeRecord = async (record) => {
 };
 
 const getRecord = async (search) => {
-  const retryDelay = [1100, 2900, 6100, 8900];
-  let error = new HttpError("", 404);
+  delay(3000)
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
     FROM record WHERE location = ? AND date = ?";
   const values = [search.location, search.date];
-  for (let i = 0; i <= retryDelay.length; i++) {
-    try {
-      const rows = await poolQuery(sql, values);
-      return rows;
-    } catch (error) {
-      error.status = error.status ? error.status : 409;
-      error.message = error.message ? error.message : "cannot store data";
-      if (i < retryDelay.length) {
-        // random number between in retryDelay
-        await delay(retryDelay[i]);
-      }
-    }
+  try {
+    const rows = await poolQuery(sql, values);
+    return rows;
+  } catch (error) {
+    return [];
+    // throw error;
   }
-  throw error;
+
 };
 
 const getReport = async (search) => {
-  const retryDelay = [1100, 2900, 6100, 8900];
-  let error = new HttpError("", 404);
+  delay(3000)
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
   FROM record WHERE location = ? AND date = ?";
   const values = [search.location, search.date];
-  for (let i = 0; i <= retryDelay.length; i++) {
-    try {
-      const rows = await poolQuery(sql, values);
-      const report = new Report(rows);
-      return report;
-    } catch (error) {
-      error.status = error.status ? error.status : 409;
-      error.message = error.message ? error.message : "cannot store data";
-      if (i < retryDelay.length) {
-        // random number between in retryDelay
-        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
-      }
-    }
+  try {
+    const rows = await poolQuery(sql, values);
+    if (rows.length === 0) return {};
+    const report = new Report(rows);
+    return report;
+  } catch (error) {
+    return {};
+    // throw error;
   }
-  throw error;
 };
 
 module.exports = { calculate, storeRecord, getRecord, getReport };
