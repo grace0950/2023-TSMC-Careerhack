@@ -13,7 +13,7 @@ services:
       - MYSQL_PORT=8300
       - REDIS_HOST=cache
     ports:
-      - 3000:3000
+      - 10.0.0.5:3000:3000
     restart: always
 
   business-2:
@@ -26,16 +26,16 @@ services:
       - MYSQL_PORT=8300
       - REDIS_HOST=cache
     ports:
-      - 3001:3000
+      - 10.0.0.5:3001:3000
     restart: always
 
-  load-balancer:
-    container_name: load-balancer
-    image: nginx:alpine
-    ports:
-      - 8100:8100
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  # load-balancer:
+  #   container_name: load-balancer
+  #   image: nginx:alpine
+  #   ports:
+  #     - 8100:8100
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
   cache:
       container_name: redis
