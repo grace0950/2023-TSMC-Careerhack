@@ -8,8 +8,8 @@ services:
     build:
       context: ./business
     environment:
-      - INVENTORY_URL=http://10.0.0.6:8200/inventory   #記得改成ip
-      - STORAGE_URL=http://10.0.0.7:8300/storage   #記得改成ip
+      - INVENTORY_URL=http://10.0.0.6:8200/api/inventory   #記得改成ip
+      - STORAGE_URL=http://10.0.0.7:8300/api/storage   #記得改成ip
     ports:
       - 3000:3000
     restart: always
@@ -19,8 +19,8 @@ services:
     container_name: business-2
     image: ha-business
     environment:
-      - INVENTORY_URL=http://10.0.0.6:8200/inventory   #記得改成ip
-      - STORAGE_URL=http://10.0.0.7:8300/storage   #記得改成ip
+      - INVENTORY_URL=http://10.0.0.6:8200/api/inventory   #記得改成ip
+      - STORAGE_URL=http://10.0.0.7:8300/api/storage   #記得改成ip
     ports:
       - 3001:3001
     restart: always
