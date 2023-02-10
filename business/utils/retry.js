@@ -23,7 +23,7 @@ const retry = async (method, url, body) => {
         highWaterMark: 100000,
       };
       const res = await fetch(url, config);
-      console.log(res, res.json());
+      // console.log(res, res.json());
       return res.json();
     } catch (e) {
       console.log(e);
