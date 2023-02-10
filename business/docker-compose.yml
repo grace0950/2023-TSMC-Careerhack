@@ -6,7 +6,7 @@ services:
     container_name: business-1
     image: ha-business
     build:
-      context: ./business
+      context: .
     environment:
       - INVENTORY_URL=http://10.0.0.6:8200/api/inventory   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
