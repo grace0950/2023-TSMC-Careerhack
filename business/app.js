@@ -35,18 +35,6 @@ const redis = new Redis({
   port: process.env.REDIS_PORT || 6379,
 });
 
-let counter = 0;
-app.use((req, res, next) => {
-  counter++;
-  console.log(counter);
-  res.on("finish", () => {
-    counter--;
-    // console.log(counter);
-  });
-
-  next();
-});
-
 app.use(async (req, res, next) => {
   req.redisClient = redis;
   next();
@@ -67,6 +55,21 @@ const businessRouter = require("./routes/business");
 // });
 
 app.use("/business", businessRouter);
+
+app.get("/clear", async (req, res) => {
+  // redis clear
+  const keys = await redis.keys("*");
+  const pipeline = redis.pipeline();
+  keys.forEach((key) => {
+    pipeline.del(key);
+  });
+  await pipeline.exec();
+  // mysql clear
+  const { poolQuery } = require("./utils/mysql");
+  await poolQuery("TRUNCATE TABLE record");
+
+  res.send("clear");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
