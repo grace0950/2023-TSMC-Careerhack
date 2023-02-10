@@ -62,7 +62,8 @@ app.listen(port, () => {
 const fetchRecord = async (_id, postBody) => {
     try {
         // console.log(postBody)
-        const res = await fetch('http://localhost:8200', {
+        const INVENTORY_HOST = process.env.INVENTORY_HOST || 'localhost';
+        const res = await fetch(`http://${INVENTORY_HOST}:8200`, {
             method: 'POST',
             body: JSON.stringify(postBody),
             headers: { 'Content-Type': 'application/json' }
