@@ -3,6 +3,7 @@ const { poolQuery } = require("../utils/mysql");
 const { HttpError } = require("../utils/httpError");
 
 const { Search } = require("../dto/Search");
+const { Report } = require("../dto/Report");
 
 const delay = (ms) =>
   new Promise(
@@ -42,17 +43,30 @@ const storeRecord = async (record) => {
 };
 
 const getRecord = async (search) => {
-  const sql = "SELECT * FROM record WHERE location = ? AND date = ?";
+  const sql =
+    "SELECT location, timestamp, signature, material, a, b, c, d \
+    FROM record WHERE location = ? AND date = ?";
   const values = [search.location, search.date];
   try {
     const rows = await poolQuery(sql, values);
-    for (let i = 0; i < rows.length; i++) {
-      delete rows[i].date;
-    }
     return rows;
   } catch (error) {
     throw error;
   }
 };
 
-module.exports = { calculate, storeRecord, getRecord };
+const getReport = async (search) => {
+  const sql =
+    "SELECT location, timestamp, signature, material, a, b, c, d \
+  FROM record WHERE location = ? AND date = ?";
+  const values = [search.location, search.date];
+  try {
+    const rows = await poolQuery(sql, values);
+    const report = new Report(rows);
+    return report;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { calculate, storeRecord, getRecord, getReport };

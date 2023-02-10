@@ -6,6 +6,6 @@ const businessController = require("../controller/business");
 
 router.post("/order", push, businessController.updateOrder);
 router.get("/record", check, businessController.getRecord);
-router.get("/report");
+router.get("/report", check, businessController.getReport);
 
 module.exports = router;

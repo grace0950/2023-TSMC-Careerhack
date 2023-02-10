@@ -38,4 +38,17 @@ const getRecord = async (req, res) => {
   }
 };
 
-module.exports = { updateOrder, getRecord };
+const getReport = async (req, res) => {
+  const search = new Search(req.query);
+  try {
+    const rows = await businessModel.getReport(search);
+    res.json(rows);
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(error.status || 500).json(error);
+    // console.log(error);
+  }
+};
+
+module.exports = { updateOrder, getRecord, getReport };
