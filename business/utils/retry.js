@@ -32,7 +32,7 @@ const retry = async (method, url, body) => {
       //   console.log("cannot fetch data");
       if (i < retryDelay.length) {
         // random number between in retryDelay
-        await delay(retryDelay[Math.floor(Math.random() * retryDelay.length)]);
+        await delay(retryDelay[i]);
       }
     }
   }
