@@ -21,7 +21,7 @@ const calculate = async (order) => {
 };
 
 const storeRecord = async (record) => {
-  const retryDelay = [1050, 2050, 4050, 6050];
+  const retryDelay = [1050, 3060, 6060, 9060];
   let error = new HttpError("", 404);
   const recordSQL = record.toSql();
   const sql = "INSERT INTO record SET ?";
