@@ -22,10 +22,7 @@ const retry = async (method, url, body) => {
         timeout: 500,
         highWaterMark: 100000,
       };
-      const start = Date.now();
       const res = await fetch(url, config);
-      const end = Date.now();
-      console.log("fetch time: ", end - start);
       return res.json();
     } catch (e) {
       console.log(e);
