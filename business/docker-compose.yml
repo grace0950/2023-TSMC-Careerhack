@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  business-1:
+    &worker
+    container_name: business-1
+    image: ha-business
+    build:
+      context: ./business
+    environment:
+      - INVENTORY_URL=http://inventory:8200/inventory   #記得改成ip
+      - STORAGE_URL=http://storage:8300/storage   #記得改成ip
+    ports:
+      - 3000:3000
+    restart: always
+
+  business-2:
+    <<: *worker
+    container_name: business-2
+    image: ha-business
+    environment:
+      - INVENTORY_URL=http://inventory:8200/inventory   #記得改成ip
+      - STORAGE_URL=http://storage:8300/storage   #記得改成ip
+    ports:
+      - 3001:3001
+    restart: always
+
+  load-balancer:
+    container_name: load-balancer
+    image: nginx:alpine
+    ports:
+      - 8100:8100
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - business-1
+      - business-2
+
+  cache:
+      container_name: redis
+      image: redis:alpine
+      restart: always
+      ports:
+        - 6379:6379
+      healthcheck:
+        test: redis-cli ping
+        interval: 10s
+        timeout: 5s
+        retries: 5
+        start_period: 3s
