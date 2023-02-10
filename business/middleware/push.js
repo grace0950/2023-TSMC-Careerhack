@@ -3,7 +3,7 @@ const push = async (req, res, next) => {
   const date = timestamp.split("T")[0];
   const redisClient = req.redisClient;
   const count = await redisClient.get(`${location}-${date}`);
-  if (!count || parseInt(count) <= 0) {
+  if (!count) {
     await redisClient.set(`${location}-${date}`, 1);
     await redisClient.expire(`${location}-${date}`, 30);
   } else {

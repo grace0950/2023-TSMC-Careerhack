@@ -3,7 +3,10 @@ const fetch = require("node-fetch-commonjs");
 const { HttpError } = require("./httpError");
 
 let delay = (ms) =>
-  new Promise((resolve) => setTimeout(resolve, ms), console.log(ms));
+  new Promise(
+    (resolve) => setTimeout(resolve, ms),
+    console.log("to inventory: ", ms)
+  );
 
 const retry = async (method, url, body) => {
   const retryDelay = [1000, 2000, 1000, 3000];
@@ -17,10 +20,15 @@ const retry = async (method, url, body) => {
         },
         body: JSON.stringify(body),
         timeout: 500,
+        highWaterMark: 100000,
       };
+      const start = Date.now();
       const res = await fetch(url, config);
+      const end = Date.now();
+      console.log("fetch time: ", end - start);
       return res.json();
     } catch (e) {
+      console.log(e);
       error.status = e.response ? e.response.status : 409;
       error.message = e.message ? e.message : "cannot calculate data";
       //   console.log("cannot fetch data");

@@ -5,7 +5,10 @@ const { HttpError } = require("../utils/httpError");
 const { Search } = require("../dto/Search");
 
 const delay = (ms) =>
-  new Promise((resolve) => setTimeout(resolve, ms), console.log(ms));
+  new Promise(
+    (resolve) => setTimeout(resolve, ms),
+    console.log("to storage: ", ms)
+  );
 
 const calculate = async (order) => {
   try {

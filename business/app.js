@@ -30,7 +30,22 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // redis client
 const Redis = require("ioredis");
-const redis = new Redis();
+const redis = new Redis({
+  host: process.env.REDIS_HOST || "localhost",
+  port: process.env.REDIS_PORT || 6379,
+});
+
+let counter = 0;
+app.use((req, res, next) => {
+  counter++;
+  console.log(counter);
+  res.on("finish", () => {
+    counter--;
+    // console.log(counter);
+  });
+
+  next();
+});
 
 app.use(async (req, res, next) => {
   req.redisClient = redis;
