@@ -6,7 +6,6 @@ import { Record } from './dto/Record.js';
 import mysql from './db/mysql.js';
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -16,6 +15,18 @@ mongoDB.connectToServer(function (err) {
     }
 });
 
+let lockCalc = 0;
+app.use((req, res, next) => {
+    lockCalc += 1;
+    res.on('finish', () => {
+        // console.log("finish: " + lockCalc);
+        setTimeout(() => {
+            lockCalc -= 1;
+        }, 100);
+    });
+    next();
+});
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 })
@@ -23,23 +34,25 @@ app.get('/', (req, res) => {
 app.post('/queue/calc', (req, res) => {
     const { postBody } = req.body;
     mongoDB.getDb().collection('calc').insertOne({ postBody });
+    res.status(200).send();
 })
 
 app.post('/queue/record', (req, res) => {
     const { queryStr, params } = req.body;
     mongoDB.getDb().collection('record').insertOne({ queryStr, params });
+    res.status(200).send();
 })
 
-let lockCalc = 0;
 setInterval(async () => {
+    console.log("calc: " + lockCalc);
     if (lockCalc) return
-    const calcCursor = await mongoDB.getDb().collection('calc').find({});
+    const calcCursor = await mongoDB.getDb().collection('calc').find({}).limit(1000);
     if (calcCursor)
-        calcCursor.forEach(async (doc) => {
+        calcCursor.forEach((doc) => {
             lockCalc += 1;
             fetchRecord(doc._id, doc.postBody);
         });
-}, 7000);
+}, 1000);
 
 let lockRecord = 0;
 setInterval(async () => {
@@ -47,19 +60,20 @@ setInterval(async () => {
 
     const recordCursor = await mongoDB.getDb().collection('record').find({});
     if (recordCursor)
-        recordCursor.forEach(async (doc) => {
+        recordCursor.forEach((doc) => {
             lockRecord += 1;
             saveRecord(doc._id, doc.queryStr, doc.params);
         })
 
-}, 11000);
+}, 3000);
 
 const port = 7777;
-app.listen(port, () => {
+const s = app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
 
 const fetchRecord = async (_id, postBody) => {
+    // console.log("fetching: " + _id + " " + postBody);
     try {
         // console.log(postBody)
         const INVENTORY_HOST = process.env.INVENTORY_HOST || 'localhost';
@@ -76,7 +90,7 @@ const fetchRecord = async (_id, postBody) => {
         mongoDB.getDb().collection('calc').deleteOne({ _id: _id });
     } catch (error) {
         // console.log(error);
-        console.log("fetch error")
+        console.log("fetch error: ", error.message)
     } finally {
         lockCalc -= 1;
     }
@@ -91,7 +105,7 @@ const saveRecord = async (_id, queryStr, params) => {
             mongoDB.getDb().collection('record').deleteOne({ _id: _id });
         }
         // console.log(error);
-        console.log("save error")
+        console.log("save error: ", error.message)
     } finally {
         lockRecord -= 1;
     }
