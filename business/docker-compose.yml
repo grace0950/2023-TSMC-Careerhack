@@ -11,7 +11,7 @@ services:
       - INVENTORY_URL=http://10.0.0.6:8200   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
       - MYSQL_PORT=8300
-      # - REDIS_HOST=cache
+      - REQUEST_QUEUE_URL=http://10.0.0.5:7777
     ports:
       - 10.0.0.5:3000:3000
     restart: always
@@ -24,7 +24,7 @@ services:
       - INVENTORY_URL=http://10.0.0.6:8200   #記得改成ip
       - MYSQL_HOST=10.0.0.7   #記得改成ip
       - MYSQL_PORT=8300
-      # - REDIS_HOST=cache
+      - REQUEST_QUEUE_URL=http://10.0.0.5:7777
     ports:
       - 10.0.0.5:3001:3000
     restart: always
