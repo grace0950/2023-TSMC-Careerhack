@@ -22,53 +22,76 @@ app.get('/', (req, res) => {
 
 app.post('/queue/calc', (req, res) => {
     const { postBody } = req.body;
-    mongoDB.getDb().collection('calc').insertOne(postBody);
+    mongoDB.getDb().collection('calc').insertOne({ postBody });
 })
 
 app.post('/queue/record', (req, res) => {
-    const { queryStr, param } = req.body;
-    mongoDB.getDb().collection('record').insertOne({ queryStr, param });
+    const { queryStr, params } = req.body;
+    mongoDB.getDb().collection('record').insertOne({ queryStr, params });
 })
 
-let lock = false;
+let lockCalc = 0;
 setInterval(async () => {
-    if (lock) return
-    lock = true;
-    const calcCursor = await mongoDB.getDb().collection('calc').findOne({});
+    if (lockCalc) return
+    const calcCursor = await mongoDB.getDb().collection('calc').find({});
     if (calcCursor)
         calcCursor.forEach(async (doc) => {
-            try {
-                const res = await fetch('http://localhost:8200', {
-                    method: 'POST',
-                    body: JSON.stringify(doc.postBody),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const recordObj = await res.json();
-                const recordDTO = new Record(recordObj);
-                const queryStr = "INSERT INTO record SET ?";
-                const param = recordDTO.toSql();
-                mongoDB.getDb().collection('record').insertOne({ queryStr, param });
-                mongoDB.getDb().collection('record').insertOne({ queryStr, param });
-            } catch (error) {
-                console.log(error);
-            }
+            lockCalc += 1;
+            fetchRecord(doc._id, doc.postBody);
         });
+}, 3000);
 
-    const recordCursor = await mongoDB.getDb().collection('record').findOne({});
+let lockRecord = 0;
+setInterval(async () => {
+    if (lockRecord) return
+
+    const recordCursor = await mongoDB.getDb().collection('record').find({});
     if (recordCursor)
         recordCursor.forEach(async (doc) => {
-            try {
-                await mysql.poolQuery(doc.queryStr, doc.param);
-                mongoDB.getDb().collection('record').deleteOne({ _id: doc._id });
-            } catch (error) {
-                console.log(error);
-            }
+            lockRecord += 1;
+            saveRecord(doc._id, doc.queryStr, doc.params);
         })
-    lock = false;
 
-}, 3000);
+}, 7000);
 
 const port = 7777;
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
+
+const fetchRecord = async (_id, postBody) => {
+    try {
+        // console.log(postBody)
+        const res = await fetch('http://localhost:8200', {
+            method: 'POST',
+            body: JSON.stringify(postBody),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const recordObj = await res.json();
+        const recordDTO = new Record(recordObj);
+        const queryStr = "INSERT INTO record SET ?";
+        const param = recordDTO.toSql();
+        mongoDB.getDb().collection('record').insertOne({ queryStr, params: [param] });
+        mongoDB.getDb().collection('calc').deleteOne({ _id: _id });
+    } catch (error) {
+        // console.log(error);
+        // console.log("error")
+    } finally {
+        lockCalc -= 1;
+    }
+}
+
+const saveRecord = async (_id, queryStr, params) => {
+    try {
+        await mysql.poolQuery(queryStr, params);
+        mongoDB.getDb().collection('record').deleteOne({ _id: _id });
+    } catch (error) {
+        if (error.sqlState === '23000') {
+            mongoDB.getDb().collection('record').deleteOne({ _id: _id });
+        }
+        // console.log(error);
+        // console.log("error")
+    } finally {
+        lockRecord -= 1;
+    }
+}
