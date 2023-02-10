@@ -21,7 +21,7 @@ const calculate = async (order) => {
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
     });
-    console.log("to inventory: ", res.status)
+    // console.log("to inventory: ", res.status)
     return res.json();
   } catch (e) {
     fetch(`${REQUEST_QUEUE_URL}/queue/calc`, {

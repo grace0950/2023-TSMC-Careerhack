@@ -39,7 +39,7 @@ setInterval(async () => {
             lockCalc += 1;
             fetchRecord(doc._id, doc.postBody);
         });
-}, 3000);
+}, 7000);
 
 let lockRecord = 0;
 setInterval(async () => {
@@ -52,7 +52,7 @@ setInterval(async () => {
             saveRecord(doc._id, doc.queryStr, doc.params);
         })
 
-}, 7000);
+}, 11000);
 
 const port = 7777;
 app.listen(port, () => {
@@ -76,7 +76,7 @@ const fetchRecord = async (_id, postBody) => {
         mongoDB.getDb().collection('calc').deleteOne({ _id: _id });
     } catch (error) {
         // console.log(error);
-        // console.log("error")
+        console.log("fetch error")
     } finally {
         lockCalc -= 1;
     }
@@ -91,7 +91,7 @@ const saveRecord = async (_id, queryStr, params) => {
             mongoDB.getDb().collection('record').deleteOne({ _id: _id });
         }
         // console.log(error);
-        // console.log("error")
+        console.log("save error")
     } finally {
         lockRecord -= 1;
     }
