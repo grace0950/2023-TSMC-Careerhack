@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  rq:
+    container_name: rq
+    build: 
+      context: .
+    environment:
+      - INVENTORY_HOST=10.0.0.6   #記得改成ip
+      - MYSQL_HOST=10.0.0.7   #記得改成ip
+      - MYSQL_PORT=8300
+      - MONGO_CONNECTION_STRING=mongodb://mongo:27017
+    ports:
+      - 10.0.0.5:7777:7777
+    restart: always
+    depends_on:
+      mongo: 
+        condition: service_healthy
+
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
+      interval: 2s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
+      
