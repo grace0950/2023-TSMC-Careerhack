@@ -54,22 +54,7 @@ const businessRouter = require("./routes/business");
 //   next();
 // });
 
-app.use("/api", businessRouter);
-
-app.get("/clear", async (req, res) => {
-  // redis clear
-  const keys = await redis.keys("*");
-  const pipeline = redis.pipeline();
-  keys.forEach((key) => {
-    pipeline.del(key);
-  });
-  await pipeline.exec();
-  // mysql clear
-  const { poolQuery } = require("./utils/mysql");
-  await poolQuery("TRUNCATE TABLE record");
-
-  res.send("clear");
-});
+app.use("/", businessRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
