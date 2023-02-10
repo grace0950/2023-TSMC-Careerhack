@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  inventory-1:
+    # &worker
+    container_name: inventory-1
+    image: ha-inventory
+    build:
+      context: ./inventory
+    ports:
+      - 8200:4000
+    restart: always
+
+  # inventory-2:
+  #   <<: *worker
+  #   container_name: inventory-2
+  #   image: ha-inventory
+  #   build:
+  #     context: ./inventory
+  #   ports:
+  #     - 4001:4001
+  #   restart: always
+
+  # proxy:
+  #   container_name: proxy
+  #   image: nginx:alpine
+  #   ports:
+  #     - 8200:80
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
