@@ -54,7 +54,7 @@ const businessRouter = require("./routes/business");
 //   next();
 // });
 
-app.use("/api", businessRouter);
+app.use("/", businessRouter);
 
 app.get("/clear", async (req, res) => {
   // redis clear
