@@ -1,9 +1,16 @@
 import express from 'express';
 import mongoDB from './db/mongo.js';
 import bodyParser from 'body-parser';
-import fetch from 'node-fetch';
+import fetch, { AbortError } from 'node-fetch';
 import { Record } from './dto/Record.js';
 import mysql from './db/mysql.js';
+
+// AbortController was added in node v14.17.0 globally
+const AbortController = globalThis.AbortController || await import('abort-controller')
+const controller = new AbortController();
+const timeout = setTimeout(() => {
+    controller.abort();
+}, 150);
 
 const app = express();
 app.use(bodyParser.json());
@@ -86,7 +93,7 @@ const fetchRecord = async (_id, postBody) => {
             method: 'POST',
             body: JSON.stringify(postBody),
             headers: { 'Content-Type': 'application/json' },
-            timeout: 100
+            signal: controller.signal
         });
         const recordObj = await res.json();
         const recordDTO = new Record(recordObj);
@@ -96,9 +103,13 @@ const fetchRecord = async (_id, postBody) => {
         mongoDB.getDb().collection('calc').deleteOne({ _id: _id });
     } catch (error) {
         // console.log(error);
+        if (error instanceof AbortError) {
+            console.log('request was aborted');
+        }
         console.log("fetch error: ", error.message)
     } finally {
         lockCalc -= 1;
+        clearTimeout(timeout);
     }
 }
 

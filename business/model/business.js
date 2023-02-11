@@ -1,5 +1,6 @@
 const { poolQuery } = require("../utils/mysql");
-const fetch = require("node-fetch-commonjs");
+// const fetch = require("node-fetch-commonjs");
+const axios = require("axios");
 
 // const { HttpError } = require("../utils/httpError");
 // const { Search } = require("../dto/Search");
@@ -16,15 +17,17 @@ const INVENTORY_URL = process.env.INVENTORY_URL || "http://localhost:8200";
 const REQUEST_QUEUE_URL = process.env.REQUEST_QUEUE_URL || "http://localhost:7777";
 const calculate = async (order) => {
   try {
-    const res = await fetch(INVENTORY_URL, {
+    const res = await axios(INVENTORY_URL, {
       method: "POST",
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
+      timeout: 100,
     });
     // console.log("to inventory: ", res.status)
     return res.json();
   } catch (e) {
-    fetch(`${REQUEST_QUEUE_URL}/queue/calc`, {
+    axios({
+      url: `${REQUEST_QUEUE_URL}/queue/record`,
       method: "POST",
       body: JSON.stringify({ postBody: order }),
       headers: { "Content-Type": "application/json" },
@@ -42,7 +45,8 @@ const storeRecord = async (record) => {
     const rows = await poolQuery(sql, values);
     return rows;
   } catch (error) {
-    fetch(`${REQUEST_QUEUE_URL}/queue/record`, {
+    axios({
+      url: `${REQUEST_QUEUE_URL}/queue/record`,
       method: "POST",
       body: JSON.stringify({ queryStr: sql, params: values }),
       headers: { "Content-Type": "application/json" },
