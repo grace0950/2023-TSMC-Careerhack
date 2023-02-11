@@ -17,21 +17,15 @@ const INVENTORY_URL = process.env.INVENTORY_URL || "http://localhost:8200";
 const REQUEST_QUEUE_URL = process.env.REQUEST_QUEUE_URL || "http://localhost:7777";
 const calculate = async (order) => {
   try {
-    const res = await axios(INVENTORY_URL, {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: { "Content-Type": "application/json" },
-      timeout: 100,
+    const res = await axios.post(INVENTORY_URL, order, {
+      timeout: 500,
     });
     // console.log("to inventory: ", res.status)
-    return res.json();
+    // console.log("to inventory: ", res.data)
+    return res.data;
   } catch (e) {
-    axios({
-      url: `${REQUEST_QUEUE_URL}/queue/record`,
-      method: "POST",
-      body: JSON.stringify({ postBody: order }),
-      headers: { "Content-Type": "application/json" },
-      timeout: 100,
+    axios.post(`${REQUEST_QUEUE_URL}/queue/calc`, { postBody: order }, {
+      timeout: 500,
     }).catch((e) => console.log("queue fault on calc: ", e.message));
     throw e;
   }
@@ -45,12 +39,8 @@ const storeRecord = async (record) => {
     const rows = await poolQuery(sql, values);
     return rows;
   } catch (error) {
-    axios({
-      url: `${REQUEST_QUEUE_URL}/queue/record`,
-      method: "POST",
-      body: JSON.stringify({ queryStr: sql, params: values }),
-      headers: { "Content-Type": "application/json" },
-      timeout: 100,
+    axios.post(`${REQUEST_QUEUE_URL}/queue/record`, { postBody: record }, {
+      timeout: 500,
     }).catch((e) => console.log("queue fault on store: ", e.message));
     throw error;
   }

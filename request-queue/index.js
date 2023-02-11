@@ -10,7 +10,7 @@ const AbortController = globalThis.AbortController || await import('abort-contro
 const controller = new AbortController();
 const timeout = setTimeout(() => {
     controller.abort();
-}, 150);
+}, 500);
 
 const app = express();
 app.use(bodyParser.json());
@@ -93,7 +93,7 @@ const fetchRecord = async (_id, postBody) => {
             method: 'POST',
             body: JSON.stringify(postBody),
             headers: { 'Content-Type': 'application/json' },
-            signal: controller.signal
+            // signal: controller.signal
         });
         const recordObj = await res.json();
         const recordDTO = new Record(recordObj);

@@ -8,8 +8,6 @@ const pool = createPool({
   database: "tsmc_storage",
   connectionLimit: 10,
   connectTimeout: 200,
-  queryTimeout: 2000,
-
 });
 
 const poolQuery = async (sql, values) => {
