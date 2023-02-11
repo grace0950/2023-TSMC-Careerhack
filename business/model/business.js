@@ -22,6 +22,7 @@ const calculate = async (order) => {
 
 const storeRecord = async (record) => {
   const retryDelay = [1100, 2900, 6100, 8900];
+  retryDelay.sort(() => Math.random() - 0.5);
   let error = new HttpError("", 404);
   const recordSQL = record.toSql();
   const sql = "INSERT INTO record SET ?";
@@ -31,6 +32,7 @@ const storeRecord = async (record) => {
       const rows = await poolQuery(sql, values);
       return rows;
     } catch (error) {
+      console.log(error);
       error.status = error.status ? error.status : 409;
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
@@ -44,6 +46,7 @@ const storeRecord = async (record) => {
 
 const getRecord = async (search) => {
   const retryDelay = [1100, 2900, 6100, 8900];
+  retryDelay.sort(() => Math.random() - 0.5);
   let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
@@ -54,6 +57,7 @@ const getRecord = async (search) => {
       const rows = await poolQuery(sql, values);
       return rows;
     } catch (error) {
+      console.log(error);
       error.status = error.status ? error.status : 409;
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
@@ -67,6 +71,7 @@ const getRecord = async (search) => {
 
 const getReport = async (search) => {
   const retryDelay = [1100, 2900, 6100, 8900];
+  retryDelay.sort(() => Math.random() - 0.5);
   let error = new HttpError("", 404);
   const sql =
     "SELECT location, timestamp, signature, material, a, b, c, d \
@@ -75,6 +80,9 @@ const getReport = async (search) => {
   for (let i = 0; i <= retryDelay.length; i++) {
     try {
       const rows = await poolQuery(sql, values);
+      if (rows.length === 0) {
+        return {};
+      }
       const report = new Report(rows);
       return report;
     } catch (error) {

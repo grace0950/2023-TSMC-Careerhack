@@ -10,6 +10,7 @@ let delay = (ms) =>
 
 const retry = async (method, url, body) => {
   const retryDelay = [900, 2900, 5900, 8900];
+  retryDelay.sort(() => Math.random() - 0.5);
   let error = new HttpError("", 404);
   for (let i = 0; i <= retryDelay.length; i++) {
     try {
@@ -19,8 +20,8 @@ const retry = async (method, url, body) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        timeout: 500,
-        highWaterMark: 100000,
+        // timeout: 500,
+        // highWaterMark: 100000,
       };
       const res = await fetch(url, config);
       // console.log(res, res.json());
