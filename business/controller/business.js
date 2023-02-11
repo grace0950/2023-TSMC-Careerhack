@@ -15,7 +15,7 @@ const updateOrder = async (req, res) => {
     return;
   } catch (error) {
     console.log(error)
-    res.status(error.status || 500).json(error);
+    res.status(200).json(error);
   }
   // finally {
   //   const date = order.timestamp.split("T")[0];

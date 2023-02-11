@@ -31,6 +31,11 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 })
 
+app.get('/clear-mongo', (req, res) => {
+    mongoDB.getDb().collection('calc').deleteMany({});
+    mongoDB.getDb().collection('record').deleteMany({});
+})
+
 app.post('/queue/calc', (req, res) => {
     const { postBody } = req.body;
     mongoDB.getDb().collection('calc').insertOne({ postBody });
