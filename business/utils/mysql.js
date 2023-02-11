@@ -7,6 +7,7 @@ const pool = mysql.createPool({
   password: "cerana",
   database: "tsmc_storage",
   connectionLimit: 10,
+  connectTimeout: 200,
 });
 
 const poolQuery = async (sql, values) => {

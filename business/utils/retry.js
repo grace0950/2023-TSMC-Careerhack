@@ -20,8 +20,7 @@ const retry = async (method, url, body) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-        // timeout: 500,
-        // highWaterMark: 100000,
+        timeout: 500,
       };
       const res = await fetch(url, config);
       // console.log(res, res.json());
