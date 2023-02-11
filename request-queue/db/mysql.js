@@ -7,8 +7,8 @@ const pool = createPool({
   password: "cerana",
   database: "tsmc_storage",
   connectionLimit: 10,
-  connectTimeout: 100,
-  queryTimeout: 1000,
+  connectTimeout: 200,
+  queryTimeout: 2000,
 
 });
 
