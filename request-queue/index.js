@@ -85,7 +85,8 @@ const fetchRecord = async (_id, postBody) => {
         const res = await fetch(`http://${INVENTORY_HOST}:8200`, {
             method: 'POST',
             body: JSON.stringify(postBody),
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 100
         });
         const recordObj = await res.json();
         const recordDTO = new Record(recordObj);

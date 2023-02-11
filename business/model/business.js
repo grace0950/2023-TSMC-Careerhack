@@ -28,6 +28,7 @@ const calculate = async (order) => {
       method: "POST",
       body: JSON.stringify({ postBody: order }),
       headers: { "Content-Type": "application/json" },
+      timeout: 100,
     }).catch((e) => console.log("queue fault on calc: ", e.message));
     throw e;
   }
@@ -45,6 +46,7 @@ const storeRecord = async (record) => {
       method: "POST",
       body: JSON.stringify({ queryStr: sql, params: values }),
       headers: { "Content-Type": "application/json" },
+      timeout: 100,
     }).catch((e) => console.log("queue fault on store: ", e.message));
     throw error;
   }
