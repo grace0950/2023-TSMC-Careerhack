@@ -8,7 +8,7 @@ const { Report } = require("../dto/Report");
 const delay = (ms) =>
   new Promise(
     (resolve) => setTimeout(resolve, ms),
-    console.log("to storage: ", ms)
+    console.log("get delay: ", ms)
   );
 
 
