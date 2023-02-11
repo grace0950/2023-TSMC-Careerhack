@@ -1,4 +1,4 @@
-// const axios = require("axios");
+const axios = require("axios");
 const fetch = require("node-fetch-commonjs");
 const { HttpError } = require("./httpError");
 
@@ -22,11 +22,11 @@ const retry = async (method, url, body) => {
         body: JSON.stringify(body),
         timeout: 500,
       };
-      const res = await fetch(url, config);
+      const res = await axios(url, config);
       // console.log(res, res.json());
       return res.json();
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       error.status = e.response ? e.response.status : 409;
       error.message = e.message ? e.message : "cannot calculate data";
       //   console.log("cannot fetch data");
