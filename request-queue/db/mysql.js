@@ -7,8 +7,8 @@ const pool = createPool({
   password: "cerana",
   database: "tsmc_storage",
   connectionLimit: 10,
-  connectTimeout: 200,
-  queryTimeout: 2000,
+  connectTimeout: 1000,
+  acquireTimeout: 2000,
 });
 
 const poolQuery = async (sql, values) => {
