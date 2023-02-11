@@ -16,7 +16,8 @@ const poolQuery = async (sql, values) => {
   try {
     if (!values) values = [];
     conn = await pool.getConnection();
-    const rows = await conn.query(sql, values);
+    sql = mysql.format(sql, values);
+    const rows = await conn.query({ sql: sql, timeout: 3000 });
     return rows[0];
   } catch (err) {
     throw err;

@@ -1,4 +1,4 @@
-import { createPool } from "mysql2";
+import { createPool, format } from "mysql2";
 
 const pool = createPool({
   host: process.env.MYSQL_HOST || "localhost",
@@ -13,9 +13,10 @@ const pool = createPool({
 
 const poolQuery = async (sql, values) => {
   return new Promise((resolve, reject) => {
+    sql = format(sql, values)
+    console.log("sql: ", sql)
     pool.query(
-      sql,
-      values,
+      { sql: sql, timeout: 3000 },
       (err, rows) => {
         if (err) {
           reject(err);
