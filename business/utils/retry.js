@@ -1,5 +1,5 @@
 const axios = require("axios");
-const fetch = require("node-fetch-commonjs");
+// const fetch = require("node-fetch-commonjs");
 const { HttpError } = require("./httpError");
 
 let delay = (ms) =>
@@ -14,17 +14,10 @@ const retry = async (method, url, body) => {
   let error = new HttpError("", 404);
   for (let i = 0; i <= retryDelay.length; i++) {
     try {
-      let config = {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-        timeout: 500,
-      };
-      const res = await axios(url, config);
-      // console.log(res, res.json());
-      return res.json();
+      // console.log(url, JSON.stringify(body));
+      const res = await axios.post(url, JSON.stringify(body));
+      console.log(res);
+      return res;
     } catch (e) {
       // console.log(e);
       error.status = e.response ? e.response.status : 409;

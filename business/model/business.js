@@ -32,7 +32,7 @@ const storeRecord = async (record) => {
       const rows = await poolQuery(sql, values);
       return rows;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       error.status = error.status ? error.status : 409;
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
@@ -57,7 +57,7 @@ const getRecord = async (search) => {
       const rows = await poolQuery(sql, values);
       return rows;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       error.status = error.status ? error.status : 409;
       error.message = error.message ? error.message : "cannot store data";
       if (i < retryDelay.length) {
