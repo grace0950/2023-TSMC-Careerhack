@@ -50,6 +50,7 @@ app.post('/queue/calc', (req, res) => {
 })
 
 app.post('/queue/record', (req, res) => {
+    console.log('/queue/record: ', req.body)
     const { queryStr, params } = req.body;
     mongoDB.getDb().collection('record').insertOne({ queryStr, params });
     res.status(200).send();
@@ -99,6 +100,7 @@ const fetchRecord = async (_id, postBody) => {
         const recordDTO = new Record(recordObj);
         const queryStr = "INSERT INTO record SET ?";
         const param = recordDTO.toSql();
+        console.log({ queryStr, params: [param] })
         mongoDB.getDb().collection('record').insertOne({ queryStr, params: [param] });
         mongoDB.getDb().collection('calc').deleteOne({ _id: _id });
     } catch (error) {

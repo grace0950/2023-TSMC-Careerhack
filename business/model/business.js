@@ -39,7 +39,7 @@ const storeRecord = async (record) => {
     const rows = await poolQuery(sql, values);
     return rows;
   } catch (error) {
-    axios.post(`${REQUEST_QUEUE_URL}/queue/record`, { postBody: record }, {
+    axios.post(`${REQUEST_QUEUE_URL}/queue/record`, { queryStr: sql, params: values }, {
       timeout: 500,
     }).catch((e) => console.log("queue fault on store: ", e.message));
     throw error;
