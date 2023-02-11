@@ -10,7 +10,7 @@ const AbortController = globalThis.AbortController || await import('abort-contro
 const controller = new AbortController();
 const timeout = setTimeout(() => {
     controller.abort();
-}, 500);
+}, 1000);
 
 const app = express();
 app.use(bodyParser.json());
